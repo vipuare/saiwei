@@ -1,11 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'SaiWei Sport',
+    url: 'https://saiweisport.com',
+    description: 'Custom sports goods supplier for global wholesalers, Amazon sellers, sports brands, clubs and distributors.',
+    knowsAbout: ['Custom Footballs', 'Football Uniforms', 'Custom Basketballs', 'Basketball Uniforms', 'Shin Guards'],
+  },
+];
 ---
 
 <Layout
   title="About SaiWei Sport | Custom Sports Goods Supplier"
   description="SaiWei Sport is a custom sports goods supplier for global wholesalers, Amazon sellers, sports brands, clubs and distributors."
   activePage="about"
+  schema={schema}
 >
   <main>
     <section class="pagehero">

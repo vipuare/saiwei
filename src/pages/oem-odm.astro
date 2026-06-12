@@ -1,11 +1,27 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'OEM/ODM Customization',
+    provider: {
+      '@type': 'Organization',
+      name: 'SaiWei Sport',
+      url: 'https://saiweisport.com',
+    },
+    description: 'OEM/ODM customization for sports goods including logo printing, sublimation teamwear, artwork support and private label packaging.',
+    serviceType: 'Sports Goods OEM/ODM',
+  },
+];
 ---
 
 <Layout
   title="OEM/ODM Customization | SaiWei Sport"
   description="OEM/ODM customization for sports goods including logo printing, sublimation teamwear, artwork support and private label packaging."
   activePage="oem-odm"
+  schema={schema}
 >
   <main>
     <section class="pagehero">

@@ -1,0 +1,341 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Admin Dashboard | SaiWei Sport" description="SaiWei Sport inquiry management dashboard." activePage="">
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="admin-header">
+          <h1>Inquiry Dashboard</h1>
+          <button id="logout-btn" class="btn btn-ghost" style="display:none">Logout</button>
+        </div>
+
+        <div id="login-panel">
+          <div class="login-box">
+            <h2>Admin Login</h2>
+            <input type="password" id="admin-token" placeholder="Enter admin password" />
+            <button class="btn btn-green" id="login-btn">Login</button>
+            <p id="login-error" class="form-status error"></p>
+          </div>
+        </div>
+
+        <div id="dashboard" style="display:none">
+          <div class="stats-bar">
+            <button class="stat-tab active" data-status="">
+              <strong>All</strong><span>Show all</span>
+            </button>
+            <button class="stat-tab" data-status="new">
+              <strong>New</strong><span>Unread</span>
+            </button>
+            <button class="stat-tab" data-status="read">
+              <strong>Read</strong><span>Opened</span>
+            </button>
+            <button class="stat-tab" data-status="replied">
+              <strong>Replied</strong><span>Responded</span>
+            </button>
+          </div>
+
+          <div id="inquiry-list"></div>
+
+          <div id="inquiry-detail" style="display:none">
+            <button class="btn btn-ghost" id="back-btn">Back to List</button>
+            <div id="detail-content"></div>
+            <div class="followup-section">
+              <h3>Add Follow-up Note</h3>
+              <textarea id="followup-note" placeholder="Add a note about this inquiry..."></textarea>
+              <button class="btn btn-green" id="add-note-btn">Add Note</button>
+            </div>
+            <div class="status-section">
+              <h3>Update Status</h3>
+              <select id="status-select">
+                <option value="new">New</option>
+                <option value="read">Read</option>
+                <option value="replied">Replied</option>
+                <option value="closed">Closed</option>
+              </select>
+              <button class="btn btn-green" id="update-status-btn">Update</button>
+            </div>
+            <div id="followup-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .login-box {
+    max-width: 400px;
+    margin: 60px auto;
+    text-align: center;
+  }
+  .login-box h2 { margin-bottom: 20px; }
+  .login-box input { margin-bottom: 16px; }
+  .form-status.error { color: #dc2626; font-size: 14px; margin-top: 12px; }
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .stat-tab {
+    padding: 16px 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .stat-tab:hover, .stat-tab.active {
+    border-color: #16a34a;
+  }
+  .stat-tab strong { display: block; font-size: 18px; color: #16a34a; }
+  .stat-tab span { font-size: 13px; color: #6b7280; }
+  .inquiry-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .inquiry-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+  }
+  .inquiry-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .inquiry-card .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .badge-new { background: #dcfce7; color: #16a34a; }
+  .badge-read { background: #dbeafe; color: #2563eb; }
+  .badge-replied { background: #fef3c7; color: #d97706; }
+  .badge-closed { background: #f3f4f6; color: #6b7280; }
+  .inquiry-card .card-meta {
+    font-size: 13px;
+    color: #6b7280;
+  }
+  .inquiry-card .card-meta span { margin-right: 16px; }
+  #detail-content {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  #detail-content p { margin: 8px 0; }
+  #detail-content strong { display: inline-block; width: 120px; color: #374151; }
+  .followup-section, .status-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .followup-section textarea, .status-section select {
+    margin: 12px 0;
+  }
+  .followup-item {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+  }
+  .followup-item .meta { font-size: 12px; color: #9ca3af; }
+  #back-btn { margin-bottom: 20px; }
+</style>
+
+<script>
+  let token = sessionStorage.getItem('admin_token') || '';
+  let currentStatus = '';
+  let currentId: number | null = null;
+
+  const loginPanel = document.getElementById('login-panel')!;
+  const dashboard = document.getElementById('dashboard')!;
+  const logoutBtn = document.getElementById('logout-btn')!;
+  const listEl = document.getElementById('inquiry-list')!;
+  const detailEl = document.getElementById('inquiry-detail')!;
+
+  function api(path: string, options?: RequestInit) {
+    return fetch(path, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Token': token,
+        ...options?.headers,
+      },
+    });
+  }
+
+  async function login() {
+    const input = document.getElementById('admin-token') as HTMLInputElement;
+    token = input.value.trim();
+    if (!token) return;
+
+    const res = await api('/api/inquiries?limit=1');
+    if (res.ok) {
+      sessionStorage.setItem('admin_token', token);
+      showDashboard();
+    } else {
+      document.getElementById('login-error')!.textContent = 'Invalid password.';
+      token = '';
+    }
+  }
+
+  function logout() {
+    token = '';
+    sessionStorage.removeItem('admin_token');
+    loginPanel.style.display = '';
+    dashboard.style.display = 'none';
+    logoutBtn.style.display = 'none';
+  }
+
+  function showDashboard() {
+    loginPanel.style.display = 'none';
+    dashboard.style.display = '';
+    logoutBtn.style.display = '';
+    loadInquiries();
+  }
+
+  async function loadInquiries() {
+    const statusParam = currentStatus ? `&status=${currentStatus}` : '';
+    const res = await api(`/api/inquiries?limit=50${statusParam}`);
+    if (!res.ok) return logout();
+
+    const data = await res.json();
+    listEl.innerHTML = '';
+
+    for (const item of data.inquiries) {
+      const date = new Date(item.created_at).toLocaleString();
+      listEl.innerHTML += `
+        <div class="inquiry-card" data-id="${item.id}">
+          <div class="card-header">
+            <strong>${escapeHtml(item.name)}</strong>
+            <span class="badge badge-${item.status}">${item.status}</span>
+          </div>
+          <div class="card-meta">
+            <span>${escapeHtml(item.product || 'N/A')}</span>
+            <span>${escapeHtml(item.market || 'N/A')}</span>
+            <span>${date}</span>
+          </div>
+        </div>`;
+    }
+
+    if (data.inquiries.length === 0) {
+      listEl.innerHTML = '<p style="color:#9ca3af;text-align:center;padding:40px">No inquiries found.</p>';
+    }
+
+    listEl.querySelectorAll('.inquiry-card').forEach(card => {
+      card.addEventListener('click', () => {
+        showDetail(parseInt((card as HTMLElement).dataset.id!));
+      });
+    });
+  }
+
+  async function showDetail(id: number) {
+    currentId = id;
+    const res = await api(`/api/inquiry/${id}`);
+    if (!res.ok) return;
+
+    const { inquiry, followups } = await res.json();
+    const date = new Date(inquiry.created_at).toLocaleString();
+
+    document.getElementById('detail-content')!.innerHTML = `
+      <p><strong>Name:</strong> ${escapeHtml(inquiry.name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(inquiry.email)}</p>
+      <p><strong>Buyer Type:</strong> ${escapeHtml(inquiry.buyer_type || 'N/A')}</p>
+      <p><strong>Product:</strong> ${escapeHtml(inquiry.product || 'N/A')}</p>
+      <p><strong>Quantity:</strong> ${escapeHtml(inquiry.quantity || 'N/A')}</p>
+      <p><strong>Market:</strong> ${escapeHtml(inquiry.market || 'N/A')}</p>
+      <p><strong>Message:</strong> ${escapeHtml(inquiry.message || 'N/A')}</p>
+      <p><strong>Status:</strong> <span class="badge badge-${inquiry.status}">${inquiry.status}</span></p>
+      <p><strong>Received:</strong> ${date}</p>
+    `;
+
+    (document.getElementById('status-select') as HTMLSelectElement).value = inquiry.status;
+
+    const followupListEl = document.getElementById('followup-list')!;
+    followupListEl.innerHTML = followups.length ? '<h3>Follow-up History</h3>' : '';
+    for (const f of followups) {
+      const fDate = new Date(f.created_at).toLocaleString();
+      followupListEl.innerHTML += `
+        <div class="followup-item">
+          <p>${escapeHtml(f.note)}</p>
+          <p class="meta">${escapeHtml(f.replied_by)} · ${fDate}</p>
+        </div>`;
+    }
+
+    listEl.style.display = 'none';
+    detailEl.style.display = '';
+    document.querySelector('.stats-bar')!.setAttribute('style', 'display:none');
+  }
+
+  function showList() {
+    listEl.style.display = '';
+    detailEl.style.display = 'none';
+    document.querySelector('.stats-bar')!.removeAttribute('style');
+    currentId = null;
+  }
+
+  async function updateStatus() {
+    if (!currentId) return;
+    const status = (document.getElementById('status-select') as HTMLSelectElement).value;
+    await api(`/api/inquiry/${currentId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+    showDetail(currentId);
+  }
+
+  async function addNote() {
+    if (!currentId) return;
+    const note = (document.getElementById('followup-note') as HTMLTextAreaElement).value.trim();
+    if (!note) return;
+    await api(`/api/inquiry/${currentId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ note, replied_by: 'admin' }),
+    });
+    (document.getElementById('followup-note') as HTMLTextAreaElement).value = '';
+    showDetail(currentId);
+  }
+
+  function escapeHtml(str: string) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById('login-btn')!.addEventListener('click', login);
+  document.getElementById('admin-token')!.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Enter') login();
+  });
+  logoutBtn.addEventListener('click', logout);
+  document.getElementById('back-btn')!.addEventListener('click', showList);
+  document.getElementById('update-status-btn')!.addEventListener('click', updateStatus);
+  document.getElementById('add-note-btn')!.addEventListener('click', addNote);
+
+  document.querySelectorAll('.stat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.stat-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentStatus = (tab as HTMLElement).dataset.status || '';
+      loadInquiries();
+    });
+  });
+
+  if (token) showDashboard();
+</script>

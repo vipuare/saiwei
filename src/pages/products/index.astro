@@ -1,0 +1,116 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allProducts = await getCollection('products');
+const products = allProducts.sort((a, b) =>
+  (parseInt(a.data.order || '99') || 99) - (parseInt(b.data.order || '99') || 99)
+);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'SaiWei Sport Products',
+    description: 'Custom sports goods including footballs, basketballs, uniforms and shin guards.',
+    numberOfItems: products.length,
+    itemListElement: products.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.data.title,
+      url: `https://saiweisport.com/products/${p.id}`,
+    })),
+  },
+];
+---
+
+<Layout
+  title="Products | SaiWei Sport Custom Football, Basketball, Teamwear & Shin Guards"
+  description="Explore SaiWei Sport custom sports goods including footballs, football uniforms, basketballs, basketball uniforms and shin guards."
+  activePage="products"
+  schema={schema}
+>
+  <main>
+    <section class="pagehero">
+      <div class="container">
+        <div class="label"><span></span> SaiWei Sport Product Line</div>
+        <h1>Custom football, basketball, teamwear and protective gear.</h1>
+        <p class="lead">Build your own sports product catalog with flexible OEM/ODM options for wholesale, private label, team projects and marketplace supply.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid3">
+          {products.map(product => (
+            <a href={`/products/${product.id}`} class="card-link">
+              <article class="card">
+                {product.data.icon && <div class="icon">{product.data.icon}</div>}
+                <h3>{product.data.title}</h3>
+                <p>{product.data.description}</p>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="container">
+        <div class="title">
+          <div>
+            <div class="kicker">Product Comparison</div>
+            <h2>Choose the right product path for your order.</h2>
+          </div>
+          <p>Use this simple structure to match your business model with SaiWei Sport's production support.</p>
+        </div>
+        <table class="table">
+          <tr>
+            <th>Order Type</th>
+            <th>Recommended Products</th>
+            <th>Best For</th>
+            <th>Customization Focus</th>
+          </tr>
+          <tr>
+            <td>Wholesale Supply</td>
+            <td>Footballs, basketballs, uniforms</td>
+            <td>Distributors and retailers</td>
+            <td>Logo, cartons, stable repeat orders</td>
+          </tr>
+          <tr>
+            <td>Amazon Private Label</td>
+            <td>Shin guards, balls, training products</td>
+            <td>Marketplace sellers</td>
+            <td>Packaging, product differentiation, listing-ready sets</td>
+          </tr>
+          <tr>
+            <td>Club & Team Orders</td>
+            <td>Football uniforms, basketball uniforms, shin guards</td>
+            <td>Clubs, schools, academies</td>
+            <td>Names, numbers, colors, badges</td>
+          </tr>
+          <tr>
+            <td>Sports Brand OEM</td>
+            <td>Full mixed collections</td>
+            <td>Emerging and established brands</td>
+            <td>Product line identity, packaging, artwork systems</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-link .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-link:hover .card {
+    transform: translateY(-4px);
+    box-shadow: 0 36px 80px rgba(16,80,35,.12);
+  }
+</style>

@@ -1,11 +1,51 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allProducts = await getCollection('products');
+const products = allProducts.sort((a, b) =>
+  (parseInt(a.data.order || '99') || 99) - (parseInt(b.data.order || '99') || 99)
+);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'SaiWei Sport',
+    url: 'https://saiweisport.com',
+    logo: 'https://saiweisport.com/favicon.svg',
+    description: 'Custom sports goods manufacturer for global B2B buyers. OEM/ODM footballs, basketballs, teamwear and shin guards.',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'sales@saiweisport.com',
+      contactType: 'sales',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'SaiWei Sport',
+    url: 'https://saiweisport.com',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Manufacturer',
+    name: 'SaiWei Sport',
+    url: 'https://saiweisport.com',
+    address: { '@type': 'PostalAddress', addressCountry: 'CN' },
+    makesOffer: products.map(p => ({
+      '@type': 'Offer',
+      itemOffered: p.data.title,
+    })),
+  },
+];
 ---
 
 <Layout
   title="SaiWei Sport | Custom Sports Goods Manufacturer for Global B2B Buyers"
   description="SaiWei Sport is a custom sports goods manufacturer for footballs, basketballs, teamwear and shin guards."
   activePage="index"
+  schema={schema}
 >
   <main>
     <section class="banner-slider" aria-label="SaiWei Sport featured banners">
@@ -91,7 +131,7 @@ import Layout from '../layouts/Layout.astro';
         <div class="title">
           <div>
             <div class="kicker">Product Arena</div>
-            <h2>One supplier. Five core sports categories.</h2>
+            <h2>One supplier. {products.length} core sports categories.</h2>
           </div>
           <p>A complete custom sports catalog for B2B buyers who need flexible order types: bulk wholesale, private label launches, team projects and marketplace inventory.</p>
         </div>
@@ -111,18 +151,14 @@ import Layout from '../layouts/Layout.astro';
             </div>
           </article>
           <div class="side">
-            <article class="card">
-              <h3>Custom Basketballs</h3>
-              <p>Indoor, outdoor and promotional basketballs with custom logos, colors and brand-ready cartons.</p>
-            </article>
-            <article class="card">
-              <h3>Basketball Uniforms</h3>
-              <p>Breathable jerseys and shorts for clubs, schools, leagues, camps and Amazon product lines.</p>
-            </article>
-            <article class="card">
-              <h3>Mixed B2B Orders</h3>
-              <p>Combine footballs, basketballs, uniforms and shin guards in one sourcing plan for easier purchasing.</p>
-            </article>
+            {products.filter(p => p.data.category === 'basketball' || p.data.category === 'mixed').map(product => (
+              <a href={`/products/${product.id}`} class="card-link">
+                <article class="card">
+                  <h3>{product.data.title}</h3>
+                  <p>{product.data.description}</p>
+                </article>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -221,3 +257,17 @@ import Layout from '../layouts/Layout.astro';
     })();
   </script>
 </Layout>
+
+<style>
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-link .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-link:hover .card {
+    transform: translateY(-4px);
+    box-shadow: 0 36px 80px rgba(16,80,35,.12);
+  }
+</style>

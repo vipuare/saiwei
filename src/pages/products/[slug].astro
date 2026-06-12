@@ -1,0 +1,108 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map(product => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const { title, description, icon, category } = product.data;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: title,
+    description: description,
+    brand: { '@type': 'Brand', name: 'SaiWei Sport' },
+    manufacturer: { '@type': 'Organization', name: 'SaiWei Sport' },
+    category: 'Sports Equipment',
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+  },
+];
+---
+
+<Layout
+  title={`${title} | SaiWei Sport`}
+  description={description}
+  activePage="products"
+  schema={schema}
+>
+  <main>
+    <section class="pagehero">
+      <div class="container">
+        <div class="label"><span></span> {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Products'}</div>
+        <h1>{title}</h1>
+        <p class="lead">{description}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="product-detail">
+          {icon && <div class="product-icon">{icon}</div>}
+          <div class="product-content">
+            <Content />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="container" style="text-align:center">
+        <h2>Interested in {title}?</h2>
+        <p style="color:var(--muted);margin:18px 0 28px">Request a custom quote with your logo, colors, packaging and quantity requirements.</p>
+        <a class="btn btn-green" href="/contact">Request a Quote</a>
+        <a class="btn btn-ghost" href="/products" style="margin-left:14px">Back to Products</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .product-detail {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .product-icon {
+    font-size: 64px;
+    width: 100px;
+    height: 100px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    background: var(--soft);
+  }
+  .product-content {
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .product-content h2 {
+    color: var(--ink);
+    margin-top: 28px;
+  }
+  .product-content ul {
+    margin: 12px 0;
+    padding-left: 20px;
+  }
+  .product-content li {
+    margin-bottom: 6px;
+  }
+  @media (max-width: 680px) {
+    .product-detail {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

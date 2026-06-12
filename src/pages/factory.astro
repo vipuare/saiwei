@@ -1,11 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Manufacturer',
+    name: 'SaiWei Sport Factory',
+    url: 'https://saiweisport.com/factory',
+    description: 'SaiWei Sport factory with OEM/ODM capabilities including product development, sampling, quality inspection and export packing.',
+    address: { '@type': 'PostalAddress', addressCountry: 'CN' },
+  },
+];
 ---
 
 <Layout
   title="Factory Strength | SaiWei Sport Sports Goods Manufacturer"
   description="Learn about SaiWei Sport factory strength, sampling, production, quality inspection, export packing and multi-category sports goods supply."
   activePage="factory"
+  schema={schema}
 >
   <main>
     <section class="pagehero">

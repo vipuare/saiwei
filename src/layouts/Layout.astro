@@ -7,9 +7,25 @@ interface Props {
   title: string;
   description?: string;
   activePage?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  schema?: object[];
 }
 
-const { title, description = '', activePage = '' } = Astro.props;
+const {
+  title,
+  description = '',
+  activePage = '',
+  canonicalUrl,
+  ogImage = '/images/og-default.jpg',
+  ogType = 'website',
+  schema = [],
+} = Astro.props;
+
+const siteUrl = 'https://saiweisport.com';
+const canonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).href;
+const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 ---
 
 <!doctype html>
@@ -21,6 +37,29 @@ const { title, description = '', activePage = '' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <title>{title}</title>
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:site_name" content="SaiWei Sport" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+
+    <!-- Schema.org JSON-LD -->
+    {schema.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
   </head>
   <body>
     <Header activePage={activePage} />
