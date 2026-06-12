@@ -1,0 +1,78 @@
+---
+const footerSections = [
+  {
+    title: 'SaiWei Sport',
+    type: 'brand' as const,
+    text: 'Custom sports goods manufacturer for global B2B buyers. Footballs, basketballs, football uniforms, basketball uniforms and slip-in shin guards with OEM/ODM customization.',
+  },
+  {
+    title: 'Products',
+    type: 'links' as const,
+    links: [
+      { label: 'Custom Footballs', href: '/products' },
+      { label: 'Football Uniforms', href: '/products' },
+      { label: 'Custom Basketballs', href: '/products' },
+      { label: 'Basketball Uniforms', href: '/products' },
+      { label: 'Shin Guards', href: '/products' },
+    ],
+  },
+  {
+    title: 'Buyers',
+    type: 'links' as const,
+    links: [
+      { label: 'Wholesalers', href: '/oem-odm' },
+      { label: 'Amazon Sellers', href: '/oem-odm' },
+      { label: 'Sports Brands', href: '/oem-odm' },
+      { label: 'Clubs & Teams', href: '/oem-odm' },
+    ],
+  },
+  {
+    title: 'Services',
+    type: 'links' as const,
+    links: [
+      { label: 'OEM/ODM', href: '/oem-odm' },
+      { label: 'Private Label', href: '/oem-odm' },
+      { label: 'Sampling', href: '/factory' },
+      { label: 'Export Packing', href: '/factory' },
+    ],
+  },
+  {
+    title: 'Contact',
+    type: 'links' as const,
+    links: [
+      { label: 'sales@saiweisport.com', href: 'mailto:sales@saiweisport.com' },
+      { label: 'WhatsApp / WeChat', href: '/contact' },
+      { label: 'Request Catalog', href: '/contact' },
+      { label: 'Get Quote', href: '/contact' },
+    ],
+  },
+];
+---
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      {footerSections.map(section => (
+        <div>
+          {section.type === 'brand' ? (
+            <>
+              <h3>{section.title}</h3>
+              <p>{section.text}</p>
+            </>
+          ) : (
+            <>
+              <h4>{section.title}</h4>
+              {section.links?.map(link => (
+                <a href={link.href}>{link.label}</a>
+              ))}
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="bottom">
+      <span>&copy; 2026 SaiWei Sport. All rights reserved.</span>
+      <span>Global B2B Supply · Europe Focus · OEM/ODM Sports Goods</span>
+    </div>
+  </div>
+</footer>

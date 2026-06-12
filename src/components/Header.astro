@@ -1,0 +1,37 @@
+---
+interface Props {
+  activePage?: string;
+}
+
+const { activePage = '' } = Astro.props;
+
+const navLinks = [
+  { href: '/products', label: 'Products', key: 'products' },
+  { href: '/oem-odm', label: 'OEM/ODM', key: 'oem-odm' },
+  { href: '/factory', label: 'Factory', key: 'factory' },
+  { href: '/about', label: 'About', key: 'about' },
+  { href: '/contact', label: 'Contact', key: 'contact' },
+];
+---
+
+<div class="top">
+  <div class="container">
+    <span>SaiWei Sport · OEM/ODM Sports Goods Manufacturer</span>
+    <span>For Wholesalers · Amazon Sellers · Sports Brands · Clubs · Distributors</span>
+  </div>
+</div>
+<header class="nav">
+  <div class="container navin">
+    <a class="brand" href="/">
+      <span class="mark">S</span>SaiWei Sport
+    </a>
+    <nav class="links">
+      {navLinks.map(link => (
+        <a href={link.href} class:list={[activePage === link.key && 'active']}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <a class="btn btn-green" href="/contact">Start Custom Order</a>
+  </div>
+</header>

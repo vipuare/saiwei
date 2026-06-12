@@ -1,11 +1,223 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="SaiWei Sport | Custom Sports Goods Manufacturer for Global B2B Buyers"
+  description="SaiWei Sport is a custom sports goods manufacturer for footballs, basketballs, teamwear and shin guards."
+  activePage="index"
+>
+  <main>
+    <section class="banner-slider" aria-label="SaiWei Sport featured banners">
+      <div class="slides">
+        <article class="slide slide-a active">
+          <div class="container slidein">
+            <div class="slide-copy">
+              <div class="label"><span></span> Custom Sports Goods Manufacturer</div>
+              <h1>Build Your Private Label Sports Line.</h1>
+              <p>Custom footballs, teamwear, basketballs and shin guards for wholesalers, Amazon sellers and sports brands worldwide.</p>
+              <div class="actions">
+                <a class="btn btn-green" href="/contact">Request OEM Quote</a>
+                <a class="btn btn-ghost" href="/products">View Products</a>
+              </div>
+            </div>
+            <div class="slide-visual">
+              <div class="mega-ball"></div>
+              <div class="floating-note note-1">Football · Teamwear · Shin Guards</div>
+              <div class="floating-note note-2">Europe Focus · Global Supply</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide slide-b">
+          <div class="container slidein">
+            <div class="slide-copy">
+              <div class="label"><span></span> Teamwear & Club Customization</div>
+              <h1>From Team Kits To Full Club Packs.</h1>
+              <p>Names, numbers, club badges, sponsor logos, training balls and protective gear in one custom order plan.</p>
+              <div class="actions">
+                <a class="btn btn-green" href="/oem-odm">Explore Customization</a>
+                <a class="btn btn-ghost" href="/factory">Factory Capability</a>
+              </div>
+            </div>
+            <div class="slide-visual">
+              <div class="jersey-shape"></div>
+              <div class="floating-note note-1">Sublimation · Logo · Packaging</div>
+              <div class="floating-note note-2">Clubs · Schools · Distributors</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide slide-c">
+          <div class="container slidein">
+            <div class="slide-copy">
+              <div class="label"><span></span> For Marketplace & Brand Buyers</div>
+              <h1>Amazon-ready Sports Products With Brand Feel.</h1>
+              <p>Private-label packaging, mixed product sourcing, sampling support and export-ready delivery for global B2B buyers.</p>
+              <div class="actions">
+                <a class="btn btn-green" href="/contact">Send Inquiry</a>
+                <a class="btn btn-ghost" href="/about">About SaiWei Sport</a>
+              </div>
+            </div>
+            <div class="slide-visual">
+              <div class="pack-stack"><span></span><span></span><span></span></div>
+              <div class="floating-note note-1">Private Label · Mixed Orders</div>
+              <div class="floating-note note-2">Wholesale · Amazon · Brands</div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="slider-dots" aria-label="Banner controls">
+        <button class="dot active" type="button" aria-label="Show banner 1"></button>
+        <button class="dot" type="button" aria-label="Show banner 2"></button>
+        <button class="dot" type="button" aria-label="Show banner 3"></button>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="container">
+        <div class="statsin">
+          <div class="stat"><strong>OEM</strong><span>Logo, color, artwork and packaging customization</span></div>
+          <div class="stat"><strong>ODM</strong><span>Product development support for private-label sellers</span></div>
+          <div class="stat"><strong>EU+</strong><span>Global supply with Europe as a key market focus</span></div>
+          <div class="stat"><strong>ALL</strong><span>Wholesale, Amazon, club, brand and mixed orders accepted</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section soft">
+      <div class="container">
+        <div class="title">
+          <div>
+            <div class="kicker">Product Arena</div>
+            <h2>One supplier. Five core sports categories.</h2>
+          </div>
+          <p>A complete custom sports catalog for B2B buyers who need flexible order types: bulk wholesale, private label launches, team projects and marketplace inventory.</p>
+        </div>
+        <div class="arena">
+          <article class="arena-main">
+            <div class="arena-content">
+              <h3>Custom Football Product System</h3>
+              <p>From footballs and uniforms to shin guards, SaiWei Sport helps buyers create a coordinated football product line with a high-end visual identity.</p>
+              <a class="btn btn-green" href="/products">View Products</a>
+            </div>
+            <div class="ball"></div>
+            <div class="chips">
+              <div class="chip c1"><strong>Custom Footballs</strong><span>Training · Match · Promotional</span></div>
+              <div class="chip c2"><strong>Football Uniforms</strong><span>Jerseys · Shorts · Full Kits</span></div>
+              <div class="chip c3"><strong>Slip-in Shin Guards</strong><span>Heat-transfer artwork · Lightweight</span></div>
+              <div class="chip c4"><strong>Club Packs</strong><span>Ball + kit + guard combinations</span></div>
+            </div>
+          </article>
+          <div class="side">
+            <article class="card">
+              <h3>Custom Basketballs</h3>
+              <p>Indoor, outdoor and promotional basketballs with custom logos, colors and brand-ready cartons.</p>
+            </article>
+            <article class="card">
+              <h3>Basketball Uniforms</h3>
+              <p>Breathable jerseys and shorts for clubs, schools, leagues, camps and Amazon product lines.</p>
+            </article>
+            <article class="card">
+              <h3>Mixed B2B Orders</h3>
+              <p>Combine footballs, basketballs, uniforms and shin guards in one sourcing plan for easier purchasing.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section video-section">
+      <div class="container">
+        <div class="video-panel">
+          <div class="video-copy">
+            <div class="kicker">Factory Video</div>
+            <h2>See how SaiWei Sport supports custom sports orders.</h2>
+            <p>
+              A quick look at our sports goods supply workflow, helping B2B buyers understand
+              product handling, production support and order preparation before they send an inquiry.
+            </p>
+            <div class="pills">
+              <span class="pill">OEM/ODM</span>
+              <span class="pill">Custom Branding</span>
+              <span class="pill">Bulk Supply</span>
+              <span class="pill">Export Orders</span>
+            </div>
+          </div>
+          <div class="video-frame">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="https://img.yfisher.com/m4820/1685006923302-5111batchmp4.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="title">
+          <div>
+            <div class="kicker">Who We Serve</div>
+            <h2>Built around real B2B buying scenarios.</h2>
+          </div>
+          <p>SaiWei Sport is designed for buyers who care about speed, customization, product consistency and a premium product presentation.</p>
+        </div>
+        <div class="buyers">
+          <article class="buyer">
+            <div class="num">01</div>
+            <h3>Wholesalers & Distributors</h3>
+            <p>Flexible sports goods supply for regional distributors, teamwear dealers and retail channels.</p>
+          </article>
+          <article class="buyer">
+            <div class="num">02</div>
+            <h3>Amazon & Online Sellers</h3>
+            <p>Private-label sports products, packaging support and mixed category options for marketplace sellers.</p>
+          </article>
+          <article class="buyer">
+            <div class="num">03</div>
+            <h3>Sports Brands & Clubs</h3>
+            <p>OEM/ODM product development for brands, clubs, academies and seasonal team projects.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const slides = document.querySelectorAll('.banner-slider .slide');
+      const dots = document.querySelectorAll('.slider-dots .dot');
+      if (!slides.length || !dots.length) return;
+      let current = 0;
+      let timer: ReturnType<typeof setInterval>;
+
+      function showSlide(index: number) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+
+      function nextSlide() {
+        showSlide((current + 1) % slides.length);
+      }
+
+      function restart() {
+        clearInterval(timer);
+        timer = setInterval(nextSlide, 5200);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          showSlide(index);
+          restart();
+        });
+      });
+
+      restart();
+    })();
+  </script>
 </Layout>
